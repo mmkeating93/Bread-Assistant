@@ -1,4 +1,4 @@
-       <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -140,6 +140,27 @@
             transform: translateY(-2px);
         }
 
+        textarea {
+            width: 100%;
+            min-height: 250px;
+            padding: 1rem;
+            font-size: 1rem;
+            font-family: 'Karla', sans-serif;
+            line-height: 1.6;
+            border: 2px solid var(--wheat);
+            border-radius: 8px;
+            background: var(--cream);
+            color: var(--deep-brown);
+            transition: all 0.3s ease;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(193, 115, 71, 0.1);
+        }
+
         .results {
             display: grid;
             gap: 1rem;
@@ -176,89 +197,6 @@
             grid-column: 1 / -1;
         }
 
-        .timer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-        }
-
-        .timer {
-            background: linear-gradient(135deg, white 0%, var(--cream) 100%);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .timer:hover {
-            border-color: var(--wheat);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px var(--shadow);
-        }
-
-        .timer.active {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--crust) 100%);
-            color: white;
-            border-color: var(--deep-brown);
-        }
-
-        .timer-name {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-            opacity: 0.8;
-        }
-
-        .timer.active .timer-name {
-            opacity: 1;
-        }
-
-        .timer-display {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
-            font-weight: 600;
-            margin: 0.5rem 0;
-        }
-
-        .timer-controls {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-top: 0.75rem;
-        }
-
-        button {
-            padding: 0.5rem 1rem;
-            font-family: 'Karla', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-start {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-start:hover {
-            background: var(--crust);
-            transform: scale(1.05);
-        }
-
-        .timer.active .btn-start,
-
-
-        .timer.active .btn-start:hover,
-        
         .footer {
             text-align: center;
             margin-top: 3rem;
@@ -290,19 +228,6 @@
             }
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .timer.active {
-            animation: pulse 2s ease-in-out infinite;
-        }
-
         @media (max-width: 768px) {
             .main-grid {
                 grid-template-columns: 1fr;
@@ -310,40 +235,6 @@
 
             h1 {
                 font-size: 2.5rem;
-            }
-
-            .timer-grid {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            }
-        }
-
-        .notification {
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            background: var(--deep-brown);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            font-weight: 500;
-            z-index: 1000;
-            animation: slideIn 0.5s ease-out;
-            display: none;
-        }
-
-        .notification.show {
-            display: block;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
             }
         }
 
@@ -356,8 +247,6 @@
     </style>
 </head>
 <body>
-    <div class="notification" id="notification"></div>
-    
     <div class="container">
         <header>
             <h1>Artisan Bread</h1>
@@ -395,56 +284,36 @@
                 </div>
             </div>
 
+            <div class="card">
+                <h2 class="card-title">Nutrition</h2>
+                <div class="input-group">
+                    <label for="flourCalories">Flour Calories per 30g</label>
+                    <input type="number" id="flourCalories" placeholder="e.g., 110" min="0" step="1" value="110">
+                </div>
+                <div class="results">
+                    <div class="result-item">
+                        <span class="result-label">Total Calories</span>
+                        <span class="result-value" id="totalCalories">0<span class="units">kcal</span></span>
+                    </div>
+                </div>
+            </div>
+
             <div class="card timers-section">
-                <h2 class="card-title">Baking Process Timers</h2>
-                <div class="timer-grid">
-                    <div class="timer" data-timer="firstMix">
-                        <div class="timer-name">First Mix</div>
-                        <div class="timer-display">10:00</div>
-                        <div class="timer-controls">
-                            <button class="btn-start" onclick="toggleTimer('firstMix')">Start</button>
-                        </div>
-                    </div>
-
-                    <div class="timer" data-timer="secondMix">
-                        <div class="timer-name">Second Mix</div>
-                        <div class="timer-display">20:00</div>
-                        <div class="timer-controls">
-                            <button class="btn-start" onclick="toggleTimer('secondMix')">Start</button>
-                        </div>
-                    </div>
-
-                    <div class="timer" data-timer="thirdMix">
-                        <div class="timer-name">Third Mix/Shape</div>
-                        <div class="timer-display">30:00</div>
-                        <div class="timer-controls">
-                            <button class="btn-start" onclick="toggleTimer('thirdMix')">Start</button>
-                        </div>
-                    </div>
-
-                    <div class="timer" data-timer="bulkRise">
-                        <div class="timer-name">Bulk Rise</div>
-                        <div class="timer-display">4:00:00</div>
-                        <div class="timer-controls">
-                            <button class="btn-start" onclick="toggleTimer('bulkRise')">Start</button>
-                        </div>
-                    </div>
-
-                    <div class="timer" data-timer="shapeRise">
-                        <div class="timer-name">Shape/Rise</div>
-                        <div class="timer-display">2:00:00</div>
-                        <div class="timer-controls">
-                            <button class="btn-start" onclick="toggleTimer('shapeRise')">Start</button>
-                        </div>
-                    </div>
-
-                    <div class="timer" data-timer="bake">
-                        <div class="timer-name">Bake</div>
-                        <div class="timer-display">45:00</div>
-                        <div class="timer-controls">
-                            <button class="btn-start" onclick="toggleTimer('bake')">Start</button>
-                        </div>
-                    </div>
+                <h2 class="card-title">Baking Instructions</h2>
+                <div class="input-group">
+                    <label for="instructions">Your Recipe Notes</label>
+                    <textarea id="instructions" placeholder="Add your baking instructions here...">1) Pull leaven out of fridge (feed if flat or has liquid layer on top)
+2) Weigh leaven, add water and flour, mix until just combined (1-2 min)
+3) Feed starter and put back into fridge
+4) Rest 30 min (autolyse)
+5) Add salt, mix on speed 2 for 4-5 min (dough will clean bowl sides and look smooth)
+6) Bulk proof 4-5 hours at room temp - completely untouched!
+7) Shape (gentle letter fold while shaping)
+8) Cold proof 12-24 hours in fridge
+9) Preheat oven to 450°F with Dutch oven inside for 30-45 min
+10) Score dough, carefully transfer to hot Dutch oven (use parchment paper)
+11) Bake covered 20-30 min (depending on size)
+12) Remove lid, bake uncovered 10-25 min until deep golden brown</textarea>
                 </div>
             </div>
         </div>
@@ -457,12 +326,15 @@
     <script>
         // Bread calculator logic
         const leavenInput = document.getElementById('leaven');
+        const flourCaloriesInput = document.getElementById('flourCalories');
         const results = document.querySelectorAll('.result-value');
 
         leavenInput.addEventListener('input', calculateRecipe);
+        flourCaloriesInput.addEventListener('input', calculateRecipe);
 
         function calculateRecipe() {
             const leaven = parseFloat(leavenInput.value) || 0;
+            const flourCaloriesPer30g = parseFloat(flourCaloriesInput.value) || 110;
             
             // Simple ratios:
             // Flour = leaven * 5
@@ -475,113 +347,32 @@
             
             const totalDough = leaven + flour + water + salt;
             
+            // Calculate calories
+            // Starter is 50% flour, so starter flour = leaven * 0.5
+            // Total flour in recipe = flour (from calculation above)
+            // This already includes the flour from the starter since flour = leaven * 5
+            // and if starter is 50% flour, then starter flour = leaven * 0.5
+            // which means additional flour = flour - (leaven * 0.5)
+            
+            // Total flour in entire recipe (including what's in the starter)
+            const totalFlourInRecipe = flour;
+            
+            // Calculate calories from flour
+            const caloriesPer1g = flourCaloriesPer30g / 30;
+            const totalCalories = totalFlourInRecipe * caloriesPer1g;
+            
             // Update display
             results[0].innerHTML = `${Math.round(water)}<span class="units">g</span>`;
             results[1].innerHTML = `${Math.round(flour)}<span class="units">g</span>`;
             results[2].innerHTML = `${Math.round(salt)}<span class="units">g</span>`;
             results[3].innerHTML = `${Math.round(totalDough)}<span class="units">g</span>`;
+            
+            // Update calorie display
+            document.getElementById('totalCalories').innerHTML = `${Math.round(totalCalories)}<span class="units">kcal</span>`;
         }
 
-        // Timer logic
-        const timers = {
-            firstMix: { duration: 10 * 60, remaining: 10 * 60, interval: null, running: false },
-            secondMix: { duration: 20 * 60, remaining: 20 * 60, interval: null, running: false },
-            thirdMix: { duration: 30 * 60, remaining: 30 * 60, interval: null, running: false },
-            bulkRise: { duration: 4 * 60 * 60, remaining: 4 * 60 * 60, interval: null, running: false },
-            shapeRise: { duration: 2 * 60 * 60, remaining: 2 * 60 * 60, interval: null, running: false },
-            bake: { duration: 45 * 60, remaining: 45 * 60, interval: null, running: false }
-        };
-
-        function formatTime(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = seconds % 60;
-            
-            if (hours > 0) {
-                return `${hours}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            }
-            return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-        }
-
-        function updateDisplay(timerName) {
-            const timerElement = document.querySelector(`[data-timer="${timerName}"]`);
-            const display = timerElement.querySelector('.timer-display');
-            display.textContent = formatTime(timers[timerName].remaining);
-        }
-
-        function toggleTimer(timerName) {
-            const timer = timers[timerName];
-            const timerElement = document.querySelector(`[data-timer="${timerName}"]`);
-            const button = timerElement.querySelector('.btn-start');
-            
-            if (timer.running) {
-                // Pause the timer
-                timer.running = false;
-                timerElement.classList.remove('active');
-                button.textContent = 'Start';
-                
-                if (timer.interval) {
-                    clearInterval(timer.interval);
-                    timer.interval = null;
-                }
-            } else {
-                // Start the timer
-                timer.running = true;
-                timerElement.classList.add('active');
-                button.textContent = 'Pause';
-                
-                timer.interval = setInterval(() => {
-                    timer.remaining--;
-                    updateDisplay(timerName);
-                    
-                    if (timer.remaining <= 0) {
-                        timer.running = false;
-                        timerElement.classList.remove('active');
-                        button.textContent = 'Start';
-                        
-                        clearInterval(timer.interval);
-                        timer.interval = null;
-                        timer.remaining = timer.duration;
-                        updateDisplay(timerName);
-                        
-                        showNotification(`${timerElement.querySelector('.timer-name').textContent} complete!`);
-                        playSound();
-                    }
-                }, 1000);
-            }
-        }
-
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
-        }
-
-        function playSound() {
-            // Create a simple beep sound using Web Audio API
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 800;
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.5);
-        }
-
-        // Initialize displays
-        Object.keys(timers).forEach(updateDisplay);
+        // Initialize with default calorie value
+        calculateRecipe();
     </script>
 </body>
 </html>
